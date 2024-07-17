@@ -1,4 +1,4 @@
-from scripts.main_central_path_directions import MEASURE_LOGOS_GITHUB, ALL_PATHWAYS, LEGENDS_LOCATION_GITHUB, LEGENDS_LOCATION
+from scripts.main_central_path_directions import MEASURE_LOGOS_GITHUB, ALL_PATHWAYS, LEGENDS_LOCATION_GITHUB
 
 def add_measure_buttons(fig, y_ticks, risk_owner_hazard):
     for tick, y_tick in enumerate(y_ticks.values):

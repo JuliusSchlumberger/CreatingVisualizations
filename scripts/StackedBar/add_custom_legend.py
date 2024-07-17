@@ -1,5 +1,5 @@
 from scripts.StackedBar.create_pattern_image import create_pattern_image
-from scripts.main_central_path_directions import LEGENDS_LOCATION_GITHUB
+from scripts.main_central_path_directions import MARKERS_LOCATION_GITHUB
 
 def add_custom_legend(fig, marker_dict, risk_owner_hazard):
     # Create and save images for each entry in marker_dict
@@ -8,14 +8,14 @@ def add_custom_legend(fig, marker_dict, risk_owner_hazard):
             pass
         elif pattern is None:
             img = create_pattern_image(color, pattern)
-            img.save(f"markers_for_github/markers_{name}_{risk_owner_hazard}.png")
+            img.save(f"markers/markers_{name}_{risk_owner_hazard}.png")
         else:
             pattern = pattern['shape']
             # print(color)
             # print('e', pattern)
             img = create_pattern_image(color, pattern)
             # img.show()
-            img.save(f"markers_for_github/markers_{name}_{risk_owner_hazard}.png")
+            img.save(f"markers/markers_{name}_{risk_owner_hazard}.png")
     # Position for the custom legend
     x_start = 1.015
     y_start = .9
@@ -27,7 +27,7 @@ def add_custom_legend(fig, marker_dict, risk_owner_hazard):
         y_position = y_start + i * y_step
         fig.add_layout_image(
             dict(
-                source=f"{LEGENDS_LOCATION_GITHUB}/markers_{name}_{risk_owner_hazard}.png",
+                source=f"{MARKERS_LOCATION_GITHUB}/markers_{name}_{risk_owner_hazard}.png",
                 xref="paper", yref="paper",
                 x=x_start, y=y_position,
                 sizex=0.03, sizey=0.03,

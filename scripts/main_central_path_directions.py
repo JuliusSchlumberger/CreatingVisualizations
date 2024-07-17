@@ -4,9 +4,10 @@ import pandas as pd
 
 
 # Logos and Legends
-DIRECTORY_MEASURE_LOGOS_GITHUB = 'https://raw.githubusercontent.com/JuliusSchlumberger/CreatingVisualizations/master/logos/'
+DIRECTORY_MEASURE_LOGOS_GITHUB = 'https://raw.githubusercontent.com/JuliusSchlumberger/CreatingVisualizations/master/logos'
 DIRECTORY_MEASURE_LOGOS = 'data/logos/'
-LEGENDS_LOCATION_GITHUB = 'https://raw.githubusercontent.com/JuliusSchlumberger/CreatingVisualizations/master/legends/'
+LEGENDS_LOCATION_GITHUB = 'https://raw.githubusercontent.com/JuliusSchlumberger/CreatingVisualizations/master/legends'
+MARKERS_LOCATION_GITHUB = 'https://raw.githubusercontent.com/JuliusSchlumberger/CreatingVisualizations/master/markers'
 
 # Input data
 FILE_PATH_ALL_PATHWAYS_SECTORS = 'data/decision_trees/stage3_portfolios_'
