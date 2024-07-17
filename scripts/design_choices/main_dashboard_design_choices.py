@@ -118,3 +118,6 @@ for i in range(6, 10):
 for i in range(10, 20):
     MEASURE_COLORS[str(i)] = mcolors.to_hex(bluegreen_colors[i-10])
 
+# Pathways Maps
+MAX_X_OFFSET = .7 # will do adjustments in horizontal direction. Needs adjustment if lines of different measures start overlap.
+MAX_Y_OFFSET = .48 # will do adjustments in vertical direction between instances. Needs adjustment if markers overlap.

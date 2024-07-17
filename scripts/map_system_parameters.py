@@ -53,7 +53,7 @@ SECTOR_OBJECTIVES = {'flood_agr': [OBJECTIVE_PARAMETER_DICT['DamAgr_f_tot'], OBJ
                              'drought_shp': [OBJECTIVE_PARAMETER_DICT['DamShp_tot'], OBJECTIVE_PARAMETER_DICT['cost_d_s']]}
 
 MEASURE_NUMBERS = {
-            'no_measure': 100,
+            'no_measure': 0,
             'd_resilient_crops': 1,
             'd_rain_irrigation': 2,
             'd_gw_irrigation': 3,
@@ -75,6 +75,34 @@ MEASURE_NUMBERS = {
             'f_awareness_campaign': 19
         }
 
+REPLACING_MEASURE = {   # if measure is not replacing any measure, empty list, else populate the lists
+    '0': [],
+    '1': ['10'],
+    '2': [],
+    '3': [],
+    '4': [],
+    '5': [],
+    '6': [],
+    '7': [],
+    '8': [],
+    '9': [],
+    '10': ['1'],
+    # blueish group
+    '11': [],
+    '12': [],
+    '13': [],
+    '14': [],
+    '15': [],
+    # greenish group
+    '16': [],
+    '17': [],
+    '18': [],
+    '19': [],
+}
+
+RENAMING_DICT = {
+    'current': '0'
+}
 
 INVERTED_MEASURE_NUMBERS = {value: key for key, value in MEASURE_NUMBERS.items()}
 

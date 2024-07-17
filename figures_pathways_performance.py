@@ -4,7 +4,7 @@ import os
 import plotly.graph_objects as go  # Import Plotly's graph_objects module
 from scripts.design_choices.main_dashboard_dropdowns import PATHWAYS_TO_HIGHLIGHT, ROH_DICT,ROH_DICT_INV, SECTOR_OBJECTIVES_BUTTONS, TIMEHORIZONS_INV
 
-from scripts.main_central_path_directions import ROH_LIST, LEGENDS_LOCATION
+from scripts.main_central_path_directions import ROH_LIST
 from scripts.map_system_parameters import SECTOR_OBJECTIVES
 from scripts.ParallelCoordinates.Parallel_Coordinates_Plot import Parallel_Coordinates_Plot
 from scripts.StackedBar.Stacked_Bar_Plot import Stacked_Bar_Plot
