@@ -53,8 +53,8 @@ HOVER_JS = '''
             // Update only the matched traces with increased marker line width and opacity
             var updateHover = {
                 // 'marker.opacity': 1,
-                'line.width': 5,
-                'marker.line.width': 5 // Increase marker line width for hovered elements
+                'line.width': 4,
+                'marker.line.width': 4 // Increase marker line width for hovered elements
             };
             Plotly.restyle(myPlot, updateHover, indices).then(function() {
                 console.log('Restyle complete');  // Debug: Log when restyling is complete

@@ -2,7 +2,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.pyplot as plt
 from scripts.PathwaysMaps._find_integers import find_first_and_second_integers
 
-def base_figure(self, data, action_pairs, action_transitions, offsets, preferred_dict_inv, measures_in_pathways, ylabels):
+def base_figure(self, data, action_pairs, action_transitions, offsets, preferred_dict_inv, measures_in_pathways, planning_horizon, ylabels):
     """
     Creates the base figure for the pathways map using Matplotlib.
 
@@ -28,13 +28,14 @@ def base_figure(self, data, action_pairs, action_transitions, offsets, preferred
 
     # Add vertical lines to the plot
     self.ax = add_vertical_lines(self.ax, action_transitions, action_pairs, offsets, line_width_line, self.measure_colors)
-    self.ax.set_xlim([2010,2110])
+    self.ax.set_xlim(planning_horizon)
     plt.xlabel('Years')
     plt.ylabel('Measures')
     plt.title('Base Pathways Map')
 
     if ylabels == 'logos':
         self.ax = add_logos(self.ax, preferred_dict_inv, self.measure_numbers_inv)
+        self.ax.get_yaxis().set_visible(False)
 
 
     elif ylabels == 'names':
@@ -70,8 +71,6 @@ def base_figure(self, data, action_pairs, action_transitions, offsets, preferred
 
         self.ax.set_yticklabels(new_labels)
 
-    # # Hide the y-axis
-    # self.ax.yaxis.set_visible(False)
 
     # Hide all spines except the bottom one
     for spine in ['top', 'right', 'left']:
@@ -80,7 +79,7 @@ def base_figure(self, data, action_pairs, action_transitions, offsets, preferred
     # Ensure the bottom spine is visible
     self.ax.spines['bottom'].set_visible(True)
 
-def other_figure(self, data, action_pairs, action_transitions, offsets, preferred_dict_inv, measures_in_pathways, ylabels, color='grey', alpha=0.8):
+def other_figure(self, data, action_pairs, action_transitions, offsets, preferred_dict_inv, measures_in_pathways, planning_horizon, ylabels, color='grey', alpha=0.8):
     """
     Creates the pathways map highlighting the effect of interactions using Matplotlib.
 
@@ -107,13 +106,10 @@ def other_figure(self, data, action_pairs, action_transitions, offsets, preferre
     # Add vertical lines to the plot
     self.ax = add_vertical_lines(self.ax, action_transitions, action_pairs, offsets, line_width_line, self.measure_colors, color=color, alpha=alpha, other_pathways=True)
 
-    self.ax.set_xlim([2010, 2110])
+    self.ax.set_xlim(planning_horizon)
     plt.xlabel('Years')
     plt.ylabel('Measures')
     plt.title('Pathways Map: Effect of interactions')
-    #
-    # if ylabels:
-    #     self.ax = add_logos(self.ax, preferred_dict_inv, self.measure_numbers_inv)
 
 def add_actions(ax, data, line_width_marker, size_marker, color='grey', alpha=0.8, other_pathways=False):
     """
@@ -174,11 +170,8 @@ def add_horizontal_lines(ax, action_pairs, line_width_line, measures_in_pathways
         for pathway, measures in measures_in_pathways.items():
             old_keys = []
             measures_split = [tuple(item.replace(']', '').split('[')) for item in measures]
-
             relevant_measures = {action_pairs[measure_instance]['Begin'][0]: measure_instance for measure_instance in measures_split if len(measure_instance) > 1}
             sorted_years = sorted(relevant_measures)
-            print(measures_split)
-            print(relevant_measures)
 
             for year in sorted_years:
                 measure_instance = relevant_measures[year]
@@ -194,7 +187,6 @@ def add_horizontal_lines(ax, action_pairs, line_width_line, measures_in_pathways
                         ax.plot([begin_coords[0], end_coords[0]], [begin_coords[1] - 0.04, end_coords[1] - 0.04], alpha=alpha if other_pathways else 1, color=color if other_pathways else measure_colors[previous], linewidth=line_width_line, linestyle=linestyle, zorder=zorder)
 
                 old_keys.append(measure)
-        # print(error)
     else:
         for (measure, instance), coords in action_pairs.items():
             if 'Begin' in coords and 'End' in coords:

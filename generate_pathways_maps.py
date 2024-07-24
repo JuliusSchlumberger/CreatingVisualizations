@@ -7,23 +7,27 @@ from scripts.PathwaysMaps.create_pathways_maps import create_pathways_maps
 
 def find_files_with_string(directory, search_string):
     matching_files = []
-    for root, dirs, files in os.walk(directory):
-        for filename in fnmatch.filter(files, f'*{search_string}*'):
-            matching_files.append(os.path.join(root, filename))
+    for filename in os.listdir(directory):
+        if fnmatch.fnmatch(filename, f'*{search_string}*'):
+            matching_files.append(os.path.join(directory, filename))
     return matching_files
 
-foci = ['drought_agr_Wp_50%', 'flood_agr_Wp_50%']
+
 for risk_owner_hazard in ROH_DICT_INV:
-    for scenarios in SCENARIO_OPTIONS:
-        focus = f'{risk_owner_hazard}_{SCENARIO_OPTIONS}_50%'
-        focus = foci[1]
+    print(risk_owner_hazard)
+    # for scenarios in SCENARIO_OPTIONS:
+    for scenario_identifier in ['Wp']:
+        # scenario_identifier = '&'.join(scenarios)
+        focus = f'{risk_owner_hazard}_{scenario_identifier}_50%'
+        # focus = foci[1]
 
         savepath = f'figures/PathwaysMaps/{risk_owner_hazard}/pathways_map_{risk_owner_hazard}'
+        planning_horizon = [2020,2120]
 
         # Initialize Pathways Generator
         line_choice = 'pathways_and_unique_lines'  # options: 'pathways', 'overlay', 'pathways_and_unique_lines'
         input_with_pathways = True  # True if input file contains pathway numbers
-        optimize_positions = False  # Automatically adjust positions to minimize vertical distance
+        optimize_positions = False  # Specifies whether to optimize 'both', 'offset', or 'base_y' positions
         num_iterations = 'all'  # Number of iterations for optimization, if False, all combinations run
         ylabels = 'logos'  # options: 'logos', 'names', 'numbers'
 
@@ -31,7 +35,7 @@ for risk_owner_hazard in ROH_DICT_INV:
         file_offset = f'{DIRECTORY_PATHWAYS_GENERATOR}/processed/{focus}_optimized_offset'
         file_base = f'{DIRECTORY_PATHWAYS_GENERATOR}/processed/{focus}_optimized_base'
 
-        create_pathways_maps(focus, line_choice, input_with_pathways,optimize_positions, file_offset, file_base, num_iterations, ylabels, savepath, interaction_identifier=False)
+        create_pathways_maps(focus, line_choice, input_with_pathways,optimize_positions, file_offset, file_base, num_iterations, ylabels, savepath,planning_horizon, risk_owner_hazard, interaction_identifier=False)
 
         matching_files = find_files_with_string(DIRECTORY_PATHWAYS_GENERATOR, f'all_sequences_{focus}')
 
@@ -39,15 +43,16 @@ for risk_owner_hazard in ROH_DICT_INV:
         for file in matching_files:
             if '&' in file: # Interaction
                 identifier = file.split(focus)[1].split('.')[0]
+                print(identifier)
 
                 savepath = f'figures/PathwaysMaps/{risk_owner_hazard}/pathways_map_{risk_owner_hazard}_combi{identifier}'
 
                 # Initialize Pathways Generator
                 line_choice = 'pathways_and_unique_lines'  # options: 'pathways', 'overlay', 'pathways_and_unique_lines'
                 input_with_pathways = True  # True if input file contains pathway numbers
-                optimize_positions = False  # Automatically adjust positions to minimize vertical distance
+                optimize_positions = 'offset'  # Specifies whether to optimize 'both', 'offset', or 'base_y' positions
                 num_iterations = 'all'  # Number of iterations for optimization, if False, all combinations run
                 ylabels = 'logos'  # options: 'logos', 'names', 'numbers'
 
                 create_pathways_maps(focus, line_choice, input_with_pathways, optimize_positions, file_offset,
-                                     file_base, num_iterations, ylabels, savepath, interaction_identifier=identifier)
+                                     file_base, num_iterations, ylabels, savepath, planning_horizon, risk_owner_hazard, interaction_identifier=identifier)

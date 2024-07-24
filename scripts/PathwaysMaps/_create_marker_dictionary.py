@@ -39,6 +39,7 @@ def create_marker_dictionary(self, actions, base_y_values, instance_dict, y_offs
             y_adjustment = 0
         else:
             instance_number = instance_dict[measure][instance]
+            # print('offsets', y_offsets)
             y_adjustment = y_offsets[str(instance_number)]
         value_adjusted = np.array([value[0], int(base_y) + y_adjustment])  # Adjust y-value
 
@@ -58,5 +59,4 @@ def create_marker_dictionary(self, actions, base_y_values, instance_dict, y_offs
         if coord_key not in action_pairs:
             action_pairs[coord_key] = {}
         action_pairs[coord_key][action_type] = value_adjusted
-
     return action_pairs, data  # Return the dictionaries for plotting and drawing

@@ -23,7 +23,7 @@ def create_instance_dictionary(self, actions, instance_dict, initial_max_instanc
             measure = parts[0].split('(')[1][1:]  # Extract measure part
             instance = parts[1].split(']')[0]  # Extract instance part
             x_position = value[0]  # Get the x-position from the value
-
+            # print('inputs', measure, instance, x_position)
             if measure not in x_position_dict:
                 x_position_dict[measure] = {}
 
@@ -34,8 +34,14 @@ def create_instance_dictionary(self, actions, instance_dict, initial_max_instanc
                     x_position_dict[measure][x_position] = 1  # Start instance numbering from 1
                 else:
                     # Increment the instance number for a new x-position
-                    new_index = max(x_position_dict[measure].values()) + 1
-                    x_position_dict[measure][x_position] = new_index
+                    if instance not in instance_dict[measure]:
+                        if x_position not in x_position_dict[measure]:
+                            new_index = max(x_position_dict[measure].values()) + 1
+                        else:
+                            new_index = max(x_position_dict[measure].values()) + 1
+                        x_position_dict[measure][x_position] = new_index
+                    else:
+                        new_index = 0
                     if new_index > initial_max_instance:
                         initial_max_instance = new_index
             else:
@@ -58,10 +64,12 @@ def create_instance_dictionary(self, actions, instance_dict, initial_max_instanc
                         x_position_dict[measure][x_position] = new_index
 
             # Assign the determined instance number to the instance
-            instance_number = x_position_dict[measure][x_position]
+            # print('xpositions2', x_position_dict[measure])
             if instance not in instance_dict[measure]:  # Don't overwrite existing instance counts
+                # instance_number = x_position_dict[measure].get(x_position, 0)
+                instance_number = x_position_dict[measure][x_position]
                 instance_dict[measure][instance] = instance_number  # Store the instance number in the dictionary
-
+            # print('instance_dict', instance_dict)
     # Determine the maximum instance number across all measures
     max_index = 0
     for value in instance_dict.values():
@@ -69,5 +77,4 @@ def create_instance_dictionary(self, actions, instance_dict, initial_max_instanc
         if length > max_index:
             max_index = length
 
-    # print(instance_dict)  # Print the resulting dictionary for debugging
     return instance_dict, max_index, x_position_dict  # Return the instance dictionary and the highest instance number assigned

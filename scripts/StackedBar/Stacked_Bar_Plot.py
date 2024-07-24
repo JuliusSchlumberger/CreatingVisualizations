@@ -161,7 +161,7 @@ def Stacked_Bar_Plot(df, risk_owner_hazard, sector_objectives, figure_title, df_
 
     # Optional: Additional features or functions called on the figure
     fig = add_measure_buttons(fig, plot_df[risk_owner_hazard].astype(str),
-                              risk_owner_hazard)  # Assuming this function is defined elsewhere
+                              risk_owner_hazard)
 
     # Add an image under the legend to the left
     fig.add_layout_image(

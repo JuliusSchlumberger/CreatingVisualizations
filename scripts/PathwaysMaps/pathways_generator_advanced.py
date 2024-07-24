@@ -54,7 +54,7 @@ class Pathways_Generator_Advanced():
         self.replacing_measure = replacing_measure
 
     def create_start_files(self, input_file_with_pathways, file_sequence_only, file_tipping_points, renaming_dict,
-                           max_x_offset, initial_measures_in_pathways=False, initial_base_y_values=False,
+                           max_x_offset, planning_horizon, initial_measures_in_pathways=False, initial_base_y_values=False,
                            instance_dict=False, initial_max_instance=False, x_position_dict=False):
         """
         Creates initial files and dictionaries needed for generating pathways.
@@ -87,7 +87,8 @@ class Pathways_Generator_Advanced():
                                                                                                         file_sequence_only,
                                                                                                         file_tipping_points,
                                                                                                         renaming_dict,
-                                                                                                        max_x_offset)
+                                                                                                        max_x_offset,
+                                                                                                        planning_horizon)
 
         if initial_measures_in_pathways:
             # Update set of measures in pathways
@@ -125,7 +126,7 @@ class Pathways_Generator_Advanced():
         return instance_dict, actions, action_transitions, base_y_values, x_offsets, measures_in_pathways, max_instance, x_position_dict
 
     def optimize_positions(self, instance_dict, actions, action_transitions, base_y_values, max_instance, max_y_offset,
-                           file_offset, file_base, num_iterations, optimize_positions='both'):
+                           file_offset, file_base, num_iterations, optimize_position='both'):
         """
         Optimizes the positions to minimize total vertical distance for action transitions.
 
@@ -144,7 +145,21 @@ class Pathways_Generator_Advanced():
         Returns:
         - None
         """
+        if num_iterations == 'interactions':
+            # Load optimized positions
+            with open(f'{file_offset}.json', 'r') as file:
+                preferred_offset = json.load(file)
+            # print(preferred_offset)
+            # Sort the keys based on their corresponding values
+            sorted_keys = sorted(preferred_offset, key=preferred_offset.get)
+
+            all_instance_keys = sorted_keys + [str(inst) for inst in range(1, max_instance + 1) if str(inst) not in sorted_keys]
+
+        else:
+            all_instance_keys = range(1, max_instance + 1)
+
         # Calculate y-offsets for instances
+        max_instance = max(max_instance,len(all_instance_keys))
         y_offsets1 = np.linspace(0, max_y_offset, int(np.floor(max_instance / 2)) + 1)
         y_offsets2 = np.linspace(-max_y_offset, 0, int(np.ceil(max_instance / 2)) + 1)[::-1]
 
@@ -155,14 +170,13 @@ class Pathways_Generator_Advanced():
         for i in range(1, len(y_offsets1)):
             rearranged_offsets.append(y_offsets1[i])
             rearranged_offsets.append(y_offsets2[i])
-
         # Insert the zero value at the beginning
         rearranged_offsets.insert(0, 0.0)
-        y_offsets = {i: rearranged_offsets[i - 1] for i in
-                     range(1, max_instance + 1)}  # Map offsets to instance numbers
+        y_offsets = {i: rearranged_offsets[int(i) - 1] for i in
+                     all_instance_keys}  # Map offsets to instance numbers
 
         create_optimized_positions(self, base_y_values, instance_dict, y_offsets, actions, action_transitions,
-                                   file_offset, file_base, num_iterations, optimize_positions)
+                                   file_offset, file_base, num_iterations, optimize_position)
 
     def create_markers(self, actions, instance_dict, preferred_offset, preferred_base, measures_in_pathways, line_choice):
         """
@@ -211,7 +225,7 @@ class Pathways_Generator_Advanced():
         return original_base_positions
 
     def create_base_figure(self, data, action_pairs, action_transitions, x_offsets, preferred_dict_inv,
-                           measures_in_pathways, ylabels):
+                           measures_in_pathways, planning_horizon, ylabels):
         """
         Creates the base figure for the pathways plot using Matplotlib.
 
@@ -227,15 +241,24 @@ class Pathways_Generator_Advanced():
         Returns:
         - None
         """
+        width_pixels = 1280
+        height_pixels = 567
+
+        # Define the DPI (dots per inch)
+        dpi = 100
+
+        # Convert pixel dimensions to inches
+        width_inch = width_pixels / dpi
+        height_inch = height_pixels / dpi
         # Create a new figure and axis for plotting
-        self.fig, self.ax = plt.subplots(figsize=(8, 8))
+        self.fig, self.ax = plt.subplots(figsize=(width_inch, height_inch))
 
         # Generate the base figure and save it
         base_figure(self, data, action_pairs, action_transitions, x_offsets, preferred_dict_inv, measures_in_pathways,
-                    ylabels)
+                    planning_horizon, ylabels)
 
     def create_base_figure_plotly(self, data, action_pairs, action_transitions, offsets, preferred_dict_inv,
-                                  measures_in_pathways, ylabels, filename):
+                                  measures_in_pathways, planning_horizon, risk_owner_hazard, ylabels, filename):
         """
         Creates the base figure for the pathways plot using Plotly.
 
@@ -253,10 +276,10 @@ class Pathways_Generator_Advanced():
         """
         # Generate the base figure and save it
         base_figure_plotly(self, data, action_pairs, action_transitions, offsets, preferred_dict_inv,
-                           measures_in_pathways, ylabels, filename)
+                           measures_in_pathways, planning_horizon, ylabels, risk_owner_hazard, filename)
 
     def pathways_change_plotly(self, data_new, action_pairs_new, action_transitions_new, data_old, action_pairs_old,
-                               action_transitions_old, offsets, preferred_dict_inv, measures_in_pathways, ylabels, filename,
+                               action_transitions_old, offsets, preferred_dict_inv, measures_in_pathways, measures_in_pathways_old, planning_horizon,risk_owner_hazard, ylabels, filename,
                                color='grey', ):
         """
         Creates a pathways change plot using Plotly.
@@ -279,11 +302,11 @@ class Pathways_Generator_Advanced():
         """
         # Generate the base figure and save it
         pathways_change_plotly(self, data_new, action_pairs_new, action_transitions_new, data_old, action_pairs_old,
-                               action_transitions_old, offsets, preferred_dict_inv, measures_in_pathways, ylabels,
+                               action_transitions_old, offsets, preferred_dict_inv, measures_in_pathways,measures_in_pathways_old, planning_horizon,risk_owner_hazard, ylabels,
                                color, filename)
 
     def add_other_map(self, data, action_pairs, action_transitions, x_offsets, preferred_dict_inv, measures_in_pathways,
-                      ylabels, color='grey', alpha=0.8):
+                      planning_horizon, ylabels, color='grey', alpha=0.8):
         """
         Adds another pathways map to the existing figure using Matplotlib.
 
@@ -302,4 +325,4 @@ class Pathways_Generator_Advanced():
         - None
         """
         other_figure(self, data, action_pairs, action_transitions, x_offsets, preferred_dict_inv, measures_in_pathways,
-                     ylabels, color, alpha)
+                     planning_horizon, ylabels, color, alpha)

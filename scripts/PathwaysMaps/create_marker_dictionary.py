@@ -1,28 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
-MEASURE_COLORS = {
-            '0': '#bfbfbf',
-            '1': '#ffcc99',
-            '2': '#ffaa66',
-            '3': '#ff8800',
-            '4': '#cc6e00',
-            '5': '#994c00',
-            '6':'#cec3e6',
-            '7': '#9d94cc',
-            '8': '#4e429f',
-            '9': '#2e2570',
-            '10': '#b3cde3',
-            '11': '#6497b1',
-            '12': '#03396c',
-            '13': '#011f4b',
-            '14': '#011a30',
-            '15': '#005b96',
-            '16': '#b2dfdb',
-            '17': '#00897b',
-            '18': '#00695c',
-            '19': '#004d40'
-        }
+from scripts.design_choices.main_dashboard_design_choices import MEASURE_COLORS
 
 def create_marker_dictionary(actions, base_y_values, instance_dict, y_offsets):
     action_pairs = {}

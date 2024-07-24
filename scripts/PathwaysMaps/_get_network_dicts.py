@@ -79,7 +79,6 @@ def get_sequences_only(input_file, file_sequence_only, renaming_dict):
     """
     with open(input_file, 'r') as file:
         all_lines = file.readlines()  # Read all lines from the file
-
     full_input = [item.split(' ') for item in all_lines]  # Split lines into components
     split_lines = [item.split(' ')[:2] for item in all_lines]  # Extract first two columns
     pathways = [item.split(' ')[-1].replace('\n', '').split(';') for item in all_lines]  # Extract pathways
@@ -166,6 +165,7 @@ def generate_unique_offsets_with_zero(keys, max_offset):
     Returns:
     - offset_dict: Dictionary mapping keys to their unique offsets.
     """
+
     num_keys = len(keys)
     offsets = np.linspace(-max_offset, max_offset, num_keys)  # Generate evenly spaced offsets
 
@@ -177,7 +177,7 @@ def generate_unique_offsets_with_zero(keys, max_offset):
     offset_dict = {key: offset for key, offset in zip(keys, offsets)}
     return offset_dict
 
-def get_network_dicts(self, input_file, file_sequence_only, file_tipping_points, renaming_dict, max_offset):
+def get_network_dicts(self, input_file, file_sequence_only, file_tipping_points, renaming_dict, max_offset, planning_horizon):
     """
     Generates network dictionaries and layouts from input files and renaming parameters.
 
@@ -200,7 +200,6 @@ def get_network_dicts(self, input_file, file_sequence_only, file_tipping_points,
         measures_in_pathways = get_sequences_only(input_file, file_sequence_only, renaming_dict)
     else:
         measures_in_pathways = 'No information about different pathways provided.'
-
     pathway_map = get_pathway_map(file_sequence_only, file_tipping_points)
     pw_layout = pathway_layout(pathway_map)
     pw_layout_repr = {repr(key): value for key, value in pw_layout.items()}
@@ -212,7 +211,6 @@ def get_network_dicts(self, input_file, file_sequence_only, file_tipping_points,
         if key.startswith('['):
             base_y_values[key[1:]] = value[1]
     base_y_values_renamed = replace_strings_in_dict_keys(base_y_values, renaming_dict)
-
     y_offsets = generate_unique_offsets_with_zero(base_y_values_renamed.keys(), max_offset)
 
     edge_list = []
@@ -222,4 +220,6 @@ def get_network_dicts(self, input_file, file_sequence_only, file_tipping_points,
         edge_list.append(repr_edge)
 
     edge_list_renamed = replace_strings_in_list(edge_list, renaming_dict)
+    pw_layout_renamed['ActionBegin("0[0]")'][0] = planning_horizon[0] - 20
+
     return pw_layout_renamed, edge_list_renamed, base_y_values_renamed, y_offsets, measures_in_pathways

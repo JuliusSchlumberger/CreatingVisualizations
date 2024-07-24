@@ -6,6 +6,7 @@ from scripts.design_choices.main_dashboard_design_choices import MEASURE_COLORS,
 from scripts.DecisionTree.assign_group_numbers import assign_group_numbers
 from scripts.DecisionTree.calculate_postion_measure import calculate_position_measure
 import pathlib
+import json
 
 def decision_tree(input_file, sector, button_path, filter_sector):
     # Convert sequences to DataFrame
@@ -78,18 +79,24 @@ def decision_tree(input_file, sector, button_path, filter_sector):
         'Y_Positions': y_positions,
     })
 
+    print(df_pathways)
+    # store new pathway numbers
+    new_pathway_numbers = {}
+    unique_pathways = df_pathways[df_pathways.X_Positions == 4].sort_values('Y_Positions')
+    for e, p in enumerate(unique_pathways['Pathway']):
+        new_pathway_numbers[e] = p
+
+    # Convert and write JSON object to file
+    with open(f"data/renamed_pathways/renamed_pathways_{sector}.json", "w") as outfile:
+        json.dump(new_pathway_numbers, outfile)
+
     # Get the index of the maximum 'X_Positions' within each 'Pathway' group
     max_indices = df_pathways.groupby('Pathway')['X_Positions'].idxmax()
 
-
     # Filter the DataFrame using these indices
     df_pathways = df_pathways.loc[max_indices]
-    # print(df_pathways)
-    # df_pathways = df_pathways.drop_duplicates(subset=['Y_Positions'])
-    print(df_pathways)
+
     position_dict = {row['Y_Positions']: str(int(row['Pathway'])) for index, row in df_pathways.iterrows()}
-    # print(df_test)
-    # print(error)
 
     fig = go.Figure()
     # Creating the scatter plot with Plotly
@@ -174,6 +181,7 @@ def decision_tree(input_file, sector, button_path, filter_sector):
             layer="above"  # Place the image below or above the data
         )
 
+
     # Update layout to configure axes and labels
     fig.update_layout(
         yaxis=dict(
@@ -181,7 +189,7 @@ def decision_tree(input_file, sector, button_path, filter_sector):
             side='right',  # Position y-axis on the right side
             tickmode='array',
             tickvals=[key for key in position_dict.keys()],  # Ensure there's a tickval for each ticktext
-            ticktext=[position_dict[key] for key in position_dict.keys()],
+            ticktext=[key for key in position_dict.keys()],
         ),
         xaxis=dict(
             tickmode='array',
@@ -197,8 +205,9 @@ def decision_tree(input_file, sector, button_path, filter_sector):
         font=dict(
                 size=14,
                 ),
-        width=600,
-        height=600,
+        width=1290,
+        height=567,
+        margin=dict(l=30, r=5, t=30, b=20),
     )
     pathlib.Path(f'figures/decision_tree/').mkdir(parents=True, exist_ok=True)
     fig.write_html(f"figures/decision_tree/alternative_pathways_{sector}.html")

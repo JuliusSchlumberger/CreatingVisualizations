@@ -4,6 +4,7 @@ TIMEHORIZONS_OF_INTEREST = [20, 60, 100]
 
 # ROBUSTNESS_METRICS_LIST = ['5%', '50%', '95%', 'average']  # 5% means that only in 5% of cases a performance is exceeded
 ROBUSTNESS_METRICS_LIST = ['average']  # 5% means that only in 5% of cases a performance is exceeded
+ROBUSTNESS_METRICS_LIST = ['50%']
 
 SCENARIO_OPTIONS = [['D', 'G', 'Wp'], ['D'], ['G'], ['Wp'],['D', 'G'], ['D', 'Wp'], ['G', 'Wp']]
 

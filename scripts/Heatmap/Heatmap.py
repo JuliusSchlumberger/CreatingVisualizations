@@ -9,6 +9,9 @@ from scripts.main_central_path_directions import LEGENDS_LOCATION_GITHUB
 
 def Heatmap(df, risk_owner_hazard, sector_objectives, figure_title, df_interaction=None):
     pivot_df, pivot_text_df = get_table_for_plot(df, risk_owner_hazard)
+    print(pivot_df)
+    print(pivot_text_df)
+    print(error)
     pivot_df = pivot_df.iloc[:, 1:]
     pivot_text_df = pivot_text_df.iloc[:, 1:]
 

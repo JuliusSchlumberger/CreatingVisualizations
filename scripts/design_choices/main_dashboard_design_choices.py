@@ -71,8 +71,8 @@ MEASURE_NUMBERS = {
             'f_awareness_campaign': 19
         }
 MEASURE_COLORS = {
-            '100': '#f3f3f3',
-            '0': '#f3f3f3',
+            '100': '#d9d9d9',
+            '0': '#d9d9d9',
             '1': '#ffaa66',
             '2': '#ff8800',
             '3': '#cc6e00',

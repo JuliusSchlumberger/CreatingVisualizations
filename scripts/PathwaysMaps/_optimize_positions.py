@@ -30,14 +30,13 @@ def create_optimized_positions(self, base_y_values, instance_dict, y_offsets, ac
     tick = 1
 
     # Generate permutations for y-offsets and base y-values
-    if ((optimize_position == 'both' and num_iterations) or optimize_position == 'offset') and num_iterations != 0:
+    if (optimize_position == 'both' or optimize_position == 'offset') and num_iterations != 'interactions':
         offset_permutations = list(itertools.permutations(y_offsets.values()))  # Generate all permutations of y-offsets
     else:
         offset_permutations = [list(y_offsets.values())]  # Use the existing y-offsets as the only permutation
-    if ((optimize_position == 'both' and num_iterations) or optimize_position == 'base_y') and num_iterations != 0:
+    if ((optimize_position == 'both' and num_iterations) or optimize_position == 'base_y') and num_iterations != 'interactions':
         base_y_values_permutations = list(itertools.permutations(base_y_values.values()))  # Generate all permutations of base y-values
     else:
-        # print(base_y_values.values())
         base_y_values_permutations = [list(base_y_values.values())]  # Use the existing base y-values as the only permutation
 
     preferred_offset = None  # Default or initial value for preferred offsets
@@ -50,18 +49,16 @@ def create_optimized_positions(self, base_y_values, instance_dict, y_offsets, ac
     if isinstance(num_iterations, int):
         print('iterations cover ',
               np.round(num_iterations / (len(offset_permutations) * len(base_y_values_permutations)), 3) * 100,
-              '% of all possible permutations.')
+              f'% of all possible permutations. Number offset-permutations:{len(offset_permutations)}; Number offset-permutations:{len(base_y_values_permutations)}')
     else:
         num_iterations = len(offset_permutations) * len(base_y_values_permutations)  # Total number of permutations
 
     for base_permutation in base_y_values_permutations:
         # Create a dictionary for the current permutation of base y-values
         base_y_values_permutation = {base_y_values_keys[i]: base_permutation[i] for i in range(len(base_permutation))}
-
         for off_permutation in offset_permutations:
             # Create a dictionary for the current permutation of y-offsets
             offset_permutation = {str(y_offsets_keys[i]): off_permutation[i] for i in range(len(off_permutation))}
-
             if tick > num_iterations:
                 # print('Not all permutations were considered for the optimization.')
                 break  # Stop if the number of iterations exceeds the limit
@@ -92,7 +89,8 @@ def create_optimized_positions(self, base_y_values, instance_dict, y_offsets, ac
 
                 progress_percentage = np.round(tick / (len(offset_permutations) * len(base_y_values_permutations)),
                                                3) * 100
-                print(f'\rOptimization Progress: {progress_percentage}% (Shortest distance: {y_dist_min})', end='')
+                print(f'\rOptimization Progress: {progress_percentage}% (Shortest distance: {y_dist_min}); '
+                      f'Number offset-permutations:{len(offset_permutations)}; Number offset-permutations:{len(base_y_values_permutations)}', end='')
 
                 tick += 1
 
@@ -104,4 +102,4 @@ def create_optimized_positions(self, base_y_values, instance_dict, y_offsets, ac
     with open(f'{file_base}.json', 'w') as file:
         json.dump(preferred_base, file)
     print() # to break the line after the progress
-    return preferred_base, preferred_offset
+    # return preferred_base, preferred_offset
