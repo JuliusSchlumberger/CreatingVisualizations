@@ -1,7 +1,7 @@
 from scripts.StackedBar.create_pattern_image import create_pattern_image
 from scripts.main_central_path_directions import MARKERS_LOCATION_GITHUB
 
-def add_custom_legend(fig, marker_dict, risk_owner_hazard):
+def add_custom_legend(fig, marker_dict, risk_owner_hazard, x_start=1, y_start=1, y_step=-0.04):
     # Create and save images for each entry in marker_dict
     for name, (color, pattern) in marker_dict.items():
         if color is None and pattern is None:
@@ -17,12 +17,23 @@ def add_custom_legend(fig, marker_dict, risk_owner_hazard):
             # img.show()
             img.save(f"markers/markers_{name}_{risk_owner_hazard}.png")
     # Position for the custom legend
-    x_start = 1.015
-    y_start = .9
-    y_step = -0.04
 
     # Add custom markers and text
     # Add custom markers and text using the saved images
+    fig.add_annotation(
+        x=x_start,  # Adjust this value to move the label left or right
+        y=y_start,  # Adjust this value to move the label up or down
+        text=f'Objectives',  # Your y-axis label text here
+        showarrow=False,
+        xref='paper',
+        yref='paper',
+        # textangle=-90,  # Rotate text for vertical orientation
+        font=dict(size=14),  # Adjust font size as needed
+        xanchor='left',
+        yanchor='bottom'
+    )
+    # y_start = y_start + y_step
+
     for i, name in enumerate(marker_dict.keys()):
         y_position = y_start + i * y_step
         fig.add_layout_image(

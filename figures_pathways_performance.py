@@ -158,11 +158,11 @@ def pathways_performance_with_interactions(scenarios, plot_type, risk_owner_haza
 
 # for plot_type in ['StackedBar', 'PCP', 'Heatmap']:
 # No Interactions
-for plot_type in ['Heatmap']:
+for plot_type in ['StackedBar']:
     for risk_owner_hazard in ROH_DICT_INV:
         for performance_metric in ROBUSTNESS_METRICS_LIST:
-            # for timehorizon in TIMEHORIZONS_INV:
-            for timehorizon in {100: 'next 100 years'}:
+            for timehorizon in TIMEHORIZONS_INV:
+            # for timehorizon in {100: 'next 100 years'}:
                 for scenarios in SCENARIO_OPTIONS:
                     if len(scenarios) > 1:
                         scenario_str = '&'.join(scenarios)

@@ -39,11 +39,11 @@ def create_vertical_legend_with_images(legend_items, max_items_per_col=4, filepa
             # Set the text for the item
             axs[row, col + 1].text(0, 0.5, text, va='center', ha='left', size=30)  # Adjust text alignment as needed
     # Draw a rectangle around the figure
-    rect = patches.Rectangle((0.1, 0), .9, 1.1, linewidth=2, edgecolor='grey', facecolor='none', transform=fig.transFigure,
+    rect = patches.Rectangle((0.1, 0), .82, 1.1, linewidth=2, edgecolor='grey', facecolor='none', transform=fig.transFigure,
                              clip_on=False)
     fig.patches.append(rect)
     # Add the 'Legend' annotation in the top left corner
-    plt.text(0.1, 1.08, 'Legend', transform=fig.transFigure, fontsize=35, va='top', ha='left')
+    plt.text(0.11, 1.06, 'Button explanation', transform=fig.transFigure, fontsize=35, va='top', ha='left')
 
 
     plt.tight_layout()

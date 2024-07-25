@@ -95,10 +95,10 @@ RANGE = {
     AXIS_LABELS[label_keys[5]]:[0,1000],
     AXIS_LABELS[label_keys[6]]:[0,20000],
     AXIS_LABELS[label_keys[7]]:[0,4000],
-    list(ROH_DICT.keys())[0]:[0,14],
-    list(ROH_DICT.keys())[1]:[0,10], # 10
-    list(ROH_DICT.keys())[2]:[0,9],
-    list(ROH_DICT.keys())[3]:[0,14],
+    list(ROH_DICT.keys())[0]:[0,7],
+    list(ROH_DICT.keys())[1]:[0,7], # 10
+    list(ROH_DICT.keys())[2]:[0,7],
+    list(ROH_DICT.keys())[3]:[0,7],
     'performance_metric': [0,1]
 }
 

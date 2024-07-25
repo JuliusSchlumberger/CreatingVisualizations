@@ -82,9 +82,10 @@ def decision_tree(input_file, sector, button_path, filter_sector):
     print(df_pathways)
     # store new pathway numbers
     new_pathway_numbers = {}
+    new_pathway_numbers[0] = 0
     unique_pathways = df_pathways[df_pathways.X_Positions == 4].sort_values('Y_Positions')
     for e, p in enumerate(unique_pathways['Pathway']):
-        new_pathway_numbers[e] = p
+        new_pathway_numbers[e+1] = p
 
     # Convert and write JSON object to file
     with open(f"data/renamed_pathways/renamed_pathways_{sector}.json", "w") as outfile:
@@ -197,7 +198,13 @@ def decision_tree(input_file, sector, button_path, filter_sector):
             ticktext=['' if numb == 0 else f'{numb}' for numb in range(5)],
             showgrid=False
         ),
-        title='Alternative Pathways and their Measure Sequences',
+        title={
+            'text': 'Alternative Pathways and their Measure Sequences',
+            'y': 0.98,  # Position the title a bit above the plot area
+            'x': 0.5,  # Center the title horizontally
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
         xaxis_title="Measure Number",
         yaxis_title="Alternative Pathways",
         plot_bgcolor="white",
